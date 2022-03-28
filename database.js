@@ -2,6 +2,7 @@ const promise = require('bluebird');
 const CONFIG = require('./appConfig');
 
 const pgp = require('pg-promise')(options);
+// Veritabanaı bağlantısı
 const config = {
     connectionString: CONFIG.connectionString,
     max: 30,

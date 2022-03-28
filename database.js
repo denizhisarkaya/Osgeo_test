@@ -1,8 +1,13 @@
-const fs = require('fs');
-var promise = require('bluebird');
-var CONFIG = require('./appConfig');
-var pgp = require('pg-promise')(options);
-var DATABASE_PGB = pgp(CONFIG.database.postgres);
+const promise = require('bluebird');
+const CONFIG = require('./appConfig');
+
+const pgp = require('pg-promise')(options);
+const config = {
+    connectionString: CONFIG.connectionString,
+    max: 30,
+    ssl: {rejectUnauthorized: false}
+};
+let DATABASE_PGB = pgp(config);
 
 module.exports = {
        getAllLocations: getAllLocations
@@ -15,9 +20,7 @@ var options = {
 function getAllLocations(cb) {
       DATABASE_PGB.any('SELECT ST_X(loc) as longitude, ST_Y(loc) as latitude from buildings')
       .then(function (data) {
-          console.log(data);
          cb(null, data);})
        .catch(function (err) {
-           console.log(err);
           cb(err)});
 }

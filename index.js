@@ -9,6 +9,7 @@ var myReadStream = fs.createReadStream(__dirname + '/index.html',
 myReadStream.pipe(res);
 });
 app.use('/api/data', function (req, res) {
+    console.log("istek geldi");
 DATABASE.getAllLocations(function (err, data) {
 if (err) {
 res.sendStatus(500);

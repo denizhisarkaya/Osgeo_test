@@ -8,7 +8,7 @@ var developmentDatabase = {
     }
     }
     
-    var connectionString = "postgressql://dbbonqaebsczjr:cd65af9754ee368bb110aa0e3a11966d72592acb556e1fa243cd24b77a5725bc@ec2-3-212-194-162.compute-1.amazonaws.com:5432/d5pmu4bu181gap?ssl=true";
+    var connectionString = "postgres://dbbonqaebsczjr:cd65af9754ee368bb110aa0e3a11966d72592acb556e1fa243cd24b77a5725bc@ec2-3-212-194-162.compute-1.amazonaws.com:5432/d5pmu4bu181gap?ssl=true";
     if (process.env.NODE_ENV == 'production') {
     //Production mode
     if (process.env.DATABASE_URL) {

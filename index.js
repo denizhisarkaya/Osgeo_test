@@ -1,6 +1,7 @@
 // express -> istekleri karşılıyor (post,get )
 var express = require('express');
 var fs = require('fs');
+var path = require('path');
 var DATABASE = require('./database.js');
 var app = express();
 app.get('/', function (req, res, next) {
@@ -9,6 +10,8 @@ app.get('/', function (req, res, next) {
         'utf8')
     myReadStream.pipe(res);
 });
+
+app.use("/img", express.static(path.join(__dirname, 'img')));
 app.use('/api/data', function (req, res) {
     DATABASE.getAllLocations(function (err, data) {
         if (err) {

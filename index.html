@@ -10,6 +10,29 @@
     <script src="http://www.openlayers.org/api/OpenLayers.js"></script>
     <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     <script>
+        const vectorLayer = new OpenLayers.Layer.Vector("Overlay");
+
+        const controls = {
+            selector: new OpenLayers.Control.SelectFeature(vectorLayer, { onSelect: createPopup, onUnselect: destroyPopup })
+        };
+
+        function createPopup(feature) {
+            feature.popup = new OpenLayers.Popup.FramedCloud("pop",
+                feature.geometry.getBounds().getCenterLonLat(),
+                null,
+                '<div class="markerContent">'+feature.attributes.description+'</div>',
+                null,
+                true,
+                function() { controls['selector'].unselectAll(); }
+            );
+            //feature.popup.closeOnMove = true;
+            map.addPopup(feature.popup);
+        }
+
+        function destroyPopup(feature) {
+            feature.popup.destroy();
+            feature.popup = null;
+        }
 
         $.getJSON('/api/data', function (data) {
             var veri1 = data[0].longitude;
@@ -20,6 +43,9 @@
 
             var point;
             var length = data.length;
+
+            map.addLayer(vectorLayer);
+
             //TODO - data haritaya ekleme işlemi
             for (point = 0; point < data.length; point++) {
                 var lon = data[point].longitude;
@@ -30,10 +56,16 @@
                 )
                 var zoom = 15;
 
-                var markers = new OpenLayers.Layer.Markers("Markers");
-                map.addLayer(markers)
+                // add control
+                map.addControl(controls['selector']);
+                controls['selector'].activate();
 
-                markers.addMarker(new OpenLayers.Marker(lonLat))
+                var feature = new OpenLayers.Feature.Vector(
+                    new OpenLayers.Geometry.Point( lonLat.lon, lonLat.lat ),
+                        {description:'<b>lat:</b>'+lat.toFixed(2)+'<br> ' + '<b>lon:</b>' + lon.toFixed(2) },
+                        {externalGraphic: 'img/marker.png', graphicHeight: 25, graphicWidth: 21, graphicXOffset:-12, graphicYOffset:-25  }
+                );   
+                vectorLayer.addFeatures(feature);
 
                 map.setCenter(lonLat, zoom)
             }
